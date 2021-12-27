@@ -7,8 +7,9 @@ import wiki.heh.spring.annotation.Service;
  * @date 2021/12/24
  */
 @Service
-public class TestService {
+public class TestService implements ITestService {
 
+    @Override
     public String get(String v) {
         return "经过service返回的->" + v;
     }
