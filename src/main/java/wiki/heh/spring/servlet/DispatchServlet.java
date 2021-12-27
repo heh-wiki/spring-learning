@@ -60,19 +60,14 @@ public class DispatchServlet extends HttpServlet {
             e.printStackTrace();
             resp.getWriter().write("500 Exection,Detail : " + Arrays.toString(e.getStackTrace()));
         }
-
-
     }
 
     private void doDispatch(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-
         Handler handler = getHandler(req);
         if(handler == null){
-//        if(!this.handlerMapping.containsKey(url)){
             resp.getWriter().write("404 Not Found!!!");
             return;
         }
-
         //获得方法的形参列表
         Class<?> [] paramTypes = handler.getParamTypes();
 
@@ -137,7 +132,6 @@ public class DispatchServlet extends HttpServlet {
         return value;
     }
 
-
     //初始化阶段
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -171,7 +165,6 @@ public class DispatchServlet extends HttpServlet {
 
             if(!clazz.isAnnotationPresent(Controller.class)){continue;}
 
-
             //保存写在类上面的@GPRequestMapping("/demo")
             String baseUrl = "";
             if(clazz.isAnnotationPresent(RequestMapping.class)){
@@ -183,12 +176,9 @@ public class DispatchServlet extends HttpServlet {
             for (Method method : clazz.getMethods()) {
                 if(!method.isAnnotationPresent(RequestMapping.class)){continue;}
                 RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-                //优化
-                // //demo///query
                 String regex = ("/" + baseUrl + "/" + requestMapping.value()).replaceAll("/+","/");
                 Pattern pattern = Pattern.compile(regex);
                 this.handlerMapping.add(new Handler(pattern,entry.getValue(),method));
-//                handlerMapping.put(url,method);
                 System.out.println("Mapped :" + pattern + "," + method);
             }
         }
